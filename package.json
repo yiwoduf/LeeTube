@@ -8,7 +8,7 @@
     "url": "git+https://github.com/yiwoduf/LeeTube.git"
   },
   "scripts": {
-    "dev": "nodemon --exec babel-node src/server.js"
+    "dev": "nodemon --exec babel-node src/init.js"
   },
   "author": "Jaeyol Lee<yiwoduf@gmail.com>",
   "license": "MIT",
