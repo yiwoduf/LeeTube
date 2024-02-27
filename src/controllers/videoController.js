@@ -1,8 +1,3 @@
-const testUser = {
-  username: "Lee",
-  loggedIn: false,
-};
-
 let videos = [
   {
     title: "Video #1",
@@ -31,7 +26,7 @@ let videos = [
 ];
 
 export const trending = (req, res) => {
-  return res.render("home", { pageTitle: "Home", testUser, videos });
+  return res.render("home", { pageTitle: "Home", videos });
 };
 
 export const view = (req, res) => {
@@ -39,7 +34,6 @@ export const view = (req, res) => {
   const video = videos[id - 1];
   return res.render("watch", {
     pageTitle: `Watching: ${video.title}`,
-    testUser,
     video,
   });
 };
@@ -49,7 +43,6 @@ export const getEdit = (req, res) => {
   const video = videos[id - 1];
   return res.render("edit", {
     pageTitle: `Editing: ${video.title}`,
-    testUser,
     video,
   });
 };
@@ -60,6 +53,25 @@ export const postEdit = (req, res) => {
   videos[id - 1].title = title;
   return res.redirect(`/videos/${id}`);
 };
+
+export const getUpload = (req, res) => {
+  return res.render("upload", { pageTitle: "Upload Video" });
+};
+
+export const postUpload = (req, res) => {
+  const { title } = req.body;
+  const newVideo = {
+    title,
+    rating: 5,
+    comments: 0,
+    createdAt: "Just Now",
+    views: 0,
+    id: videos.length + 1,
+  };
+  videos.push(newVideo);
+  return res.redirect("/");
+};
+
 export const search = (req, res) => res.send("Search", { pageTitle: "Search" });
 
 export const upload = (req, res) => res.send("Upload", { pageTitle: "Upload" });
