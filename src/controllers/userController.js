@@ -9,7 +9,7 @@ export const postJoin = async (req, res) => {
   /* Username & Email duplicate check */
   const usernameExists = await User.exists({ username });
   if (usernameExists) {
-    return res.render("join", {
+    return res.status(400).render("join", {
       pageTitle: "Join",
       errorMessage: "This username cannot be used.",
     });
@@ -17,7 +17,7 @@ export const postJoin = async (req, res) => {
 
   const emailExists = await User.exists({ email });
   if (emailExists) {
-    return res.render("join", {
+    return res.status(400).render("join", {
       pageTitle: "Join",
       errorMessage: "This email is already used.",
     });
@@ -26,7 +26,7 @@ export const postJoin = async (req, res) => {
 
   /* Check Password Confirm */
   if (password !== passwordConfirm) {
-    return res.render("join", {
+    return res.status(400).render("join", {
       pageTitle: "Join",
       errorMessage: "Password does not match.",
     });
