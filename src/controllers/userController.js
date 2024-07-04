@@ -3,7 +3,36 @@ import User from "../models/User";
 export const getJoin = (req, res) => res.render("join", { pageTitle: "Join" });
 
 export const postJoin = async (req, res) => {
-  const { name, username, email, password, location } = req.body;
+  const { name, username, email, password, passwordConfirm, location } =
+    req.body;
+
+  /* Username & Email duplicate check */
+  const usernameExists = await User.exists({ username });
+  if (usernameExists) {
+    return res.render("join", {
+      pageTitle: "Join",
+      errorMessage: "This username cannot be used.",
+    });
+  }
+
+  const emailExists = await User.exists({ email });
+  if (emailExists) {
+    return res.render("join", {
+      pageTitle: "Join",
+      errorMessage: "This email is already used.",
+    });
+  }
+  /* END */
+
+  /* Check Password Confirm */
+  if (password !== passwordConfirm) {
+    return res.render("join", {
+      pageTitle: "Join",
+      errorMessage: "Password does not match.",
+    });
+  }
+  /* END */
+
   await User.create({
     name,
     username,
