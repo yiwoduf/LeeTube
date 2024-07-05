@@ -4,6 +4,7 @@ import session from "express-session";
 import rootRouter from "./routers/rootRouter";
 import userRouter from "./routers/userRouter";
 import videoRouter from "./routers/videoRouter";
+import { localsMiddleware } from "./middlewares";
 
 /* SETUP EXPRESS SERVER */
 const app = express();
@@ -19,7 +20,20 @@ app.use(express.urlencoded({ extended: true })); // HTML form data to JS
 /* SETUP SESSION */
 app.use(session({ secret: "test", resave: true, saveUninitialized: true }));
 
+app.use((req, res, next) => {
+  req.sessionStore.all((error, sessions) => {
+    console.log(sessions);
+    next();
+  });
+});
+
+app.get("/add-one", (req, res, next) => {
+  req.session.test += 1;
+  return res.send(`${req.session.id}\n${req.session.test}`);
+});
+
 /* SET ROUTERS */
+app.use(localsMiddleware);
 app.use("/", rootRouter);
 app.use("/videos", videoRouter);
 app.use("/users", userRouter);

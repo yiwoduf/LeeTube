@@ -76,7 +76,10 @@ export const postLogin = async (req, res) => {
     });
   }
 
-  console.log("Logged In");
+  /* Store Login Info & User to Session */
+  req.session.loggedIn = true;
+  req.session.user = user;
+
   return res.redirect("/");
 };
 
