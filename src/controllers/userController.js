@@ -83,6 +83,64 @@ export const postLogin = async (req, res) => {
   return res.redirect("/");
 };
 
+/* START - GITHUB OAUTH */
+export const startGithubLogin = (req, res) => {
+  const baseUrl = "https://github.com/login/oauth/authorize?";
+  const config = {
+    client_id: process.env.GITHUB_CLIENT,
+    // allow_signup: false,
+    scope: "read:user user:email",
+  };
+  const params = new URLSearchParams(config).toString();
+  const finalUrl = `${baseUrl}${params}`;
+  return res.redirect(finalUrl);
+};
+
+export const finishGithubLogin = async (req, res) => {
+  const baseUrl = "https://github.com/login/oauth/access_token?";
+  const config = {
+    client_id: process.env.GITHUB_CLIENT,
+    client_secret: process.env.GITHUB_SECRET,
+    code: req.query.code,
+  };
+
+  const params = new URLSearchParams(config).toString();
+  const finalUrl = `${baseUrl}${params}`;
+  const tokenRequest = await (
+    await fetch(finalUrl, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+      },
+    })
+  ).json(); // FETCH URL & GET DATA FROM GITHUB
+  if ("access_token" in tokenRequest) {
+    // REQUEST TOKEN FROM CODE
+    const { access_token } = tokenRequest;
+    const apiUrl = "https://api.github.com";
+    const userData = await (
+      await fetch(`${apiUrl}/user`, {
+        headers: { Authorization: `token ${access_token}` },
+      })
+    ).json();
+    console.log(userData);
+    const emailData = await (
+      await fetch(`${apiUrl}/user/emails`, {
+        headers: { Authorization: `token ${access_token}` },
+      })
+    ).json();
+    const email = emailData.find(
+      (email) => email.primary === ture && email.verified === true
+    );
+    if (!email) {
+      return red.redirect("/login");
+    }
+  } else {
+    return res.redirect("/login");
+  }
+};
+/* END - GITHUB OAUTH */
+
 export const edit = (req, res) => res.send("Edit User");
 
 export const remove = (req, res) => res.send("Remove User");
