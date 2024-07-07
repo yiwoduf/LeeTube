@@ -18,7 +18,7 @@ app.set("views", process.cwd() + "/src/views");
 app.use(logger);
 app.use(express.urlencoded({ extended: true })); // HTML form data to JS
 
-console.log("yoyo", process.env.COOKIE_SECRET);
+console.log(process.env.COOKIE_SECRET, process.env.DB_URL);
 
 /* SETUP SESSION */
 app.use(

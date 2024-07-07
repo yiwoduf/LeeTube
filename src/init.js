@@ -1,3 +1,6 @@
+/* SET ENVIRONMENT VARIABLES */
+import "dotenv/config";
+
 /* INITIALIZE SERVER */
 import "./db";
 import "./models/Video";
