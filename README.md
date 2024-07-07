@@ -53,7 +53,7 @@ npm install
 
 ```javascript
 DB_URL = your_mongodb_connection_string;
-SECRET = your_session_secret;
+COOKIE_SECRET = your_session_secret;
 ```
 
 4. Run the development server:
