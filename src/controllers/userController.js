@@ -61,12 +61,14 @@ export const postLogin = async (req, res) => {
   let errorMessage = "Can't find account with entered credentials.";
 
   const user = await User.findOne({ username });
+  // No User Found
   if (!user) {
     return res.status(400).render("login", {
       pageTitle,
       errorMessage,
     });
   }
+  // Social Only Account
   if (user.socialOnly) {
     errorMessage =
       "This account is created with social login, please login with your social acount";
@@ -130,6 +132,7 @@ export const finishGithubLogin = async (req, res) => {
         headers: { Authorization: `token ${access_token}` },
       })
     ).json();
+    console.log(userData);
     const emailData = await (
       await fetch(`${apiUrl}/user/emails`, {
         headers: { Authorization: `token ${access_token}` },
