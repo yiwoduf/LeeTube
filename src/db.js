@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 /* CONNECT TO MONGO DB LOCAL */
-mongoose.connect("mongodb://127.0.0.1:27017/leetube");
+mongoose.connect(process.env.DB_URL);
 
 /* CONSOLE LOG CONNECTION INFO */
 const db = mongoose.connection;

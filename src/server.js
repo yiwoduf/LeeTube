@@ -18,13 +18,15 @@ app.set("views", process.cwd() + "/src/views");
 app.use(logger);
 app.use(express.urlencoded({ extended: true })); // HTML form data to JS
 
+console.log("yoyo", process.env.COOKIE_SECRET);
+
 /* SETUP SESSION */
 app.use(
   session({
-    secret: "test",
-    resave: true,
-    saveUninitialized: true,
-    store: MongoStore.create({ mongoUrl: "mongodb://127.0.0.1:27017/leetube" }),
+    secret: process.env.COOKIE_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    store: MongoStore.create({ mongoUrl: process.env.DB_URL }),
   })
 );
 
