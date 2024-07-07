@@ -58,16 +58,23 @@ export const getLogin = (req, res) =>
 export const postLogin = async (req, res) => {
   const { username, password } = req.body;
   const pageTitle = "Login";
-  const errorMessage = "Can't find account with entered credentials.";
+  let errorMessage = "Can't find account with entered credentials.";
 
-  const user = await User.findOne({ username, socialOnly: false });
+  const user = await User.findOne({ username });
   if (!user) {
     return res.status(400).render("login", {
       pageTitle,
       errorMessage,
     });
   }
-
+  if (user.socialOnly) {
+    errorMessage =
+      "This account is created with social login, please login with your social acount";
+    return res.status(400).render("login", {
+      pageTitle,
+      errorMessage,
+    });
+  }
   const success = await bcrypt.compare(password, user.password);
   if (!success) {
     return res.status(400).render("login", {
@@ -136,7 +143,7 @@ export const finishGithubLogin = async (req, res) => {
     }
     let user = await User.findOne({ email: emailObj.email });
     if (!user) {
-      const user = await User.create({
+      user = await User.create({
         name: userData.name,
         username: userData.login,
         email: emailObj.email,
