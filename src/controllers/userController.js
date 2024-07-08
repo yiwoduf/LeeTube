@@ -169,9 +169,63 @@ export const getEdit = (req, res) => {
   return res.render("edit-profile", { pageTitle: "Edit Profile" });
 };
 
-export const postEdit = (req, res) => {
-  return res.render("edit-profile");
+export const postEdit = async (req, res) => {
+  const {
+    session: {
+      user: {
+        _id,
+        email: currentEmail,
+        username: currentUsername,
+        name: currentName,
+        location: currentLocation,
+      },
+    },
+    body: { name, email, username, location },
+  } = req;
+
+  const updates = {};
+  if (name !== currentName) updates.name = name;
+  if (location !== currentLocation) updates.location = location;
+
+  // Check if email has changed THEN if it is duplicate & not the same user
+  if (email !== currentEmail) {
+    const existingEmail = await User.findOne({ email, _id: { $ne: _id } });
+    if (existingEmail) {
+      return res.status(400).render("edit-profile", {
+        pageTitle: "Edit Profile",
+        errorMessage: "This email is already taken.",
+      });
+    }
+    updates.email = email;
+  }
+
+  // Check if username has changed THEN if it is duplicate & not the same user
+  if (username !== currentUsername) {
+    const existingUsername = await User.findOne({
+      username,
+      _id: { $ne: _id },
+    });
+    if (existingUsername) {
+      return res.status(400).render("edit-profile", {
+        pageTitle: "Edit Profile",
+        errorMessage: "This username is already taken.",
+      });
+    }
+    updates.username = username;
+  }
+
+  // Only update if there are changes
+  if (Object.keys(updates).length > 0) {
+    const updatedUser = await User.findByIdAndUpdate(_id, updates, {
+      new: true,
+    });
+    req.session.user = updatedUser;
+  }
+
+  return res.redirect("/users/edit");
 };
+
+/* END - PROFILE EDIT */
 
 export const remove = (req, res) => res.send("Remove User");
 
