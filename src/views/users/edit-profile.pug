@@ -1,4 +1,4 @@
-extends base
+extends ../base
 
 block content 
     if errorMessage
@@ -9,3 +9,8 @@ block content
         input(placeholder= "Username", name="username", type="text", required, value=loggedInUser.username)
         input(placeholder= "Location", name="location", type="text", value=loggedInUser.location)
         input(type="submit", value="Update Profile")
+        br
+        if loggedInUser.socialOnly
+            button(disabled) Accounts created with social profile cannot update passwords
+        else
+            a(href="change-password") Change Password &rarr;
