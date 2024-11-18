@@ -1,3 +1,4 @@
 /node_modules
 .env
 Start-Mongo.bat
+/uploads
