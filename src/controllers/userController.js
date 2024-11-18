@@ -175,6 +175,7 @@ export const postEdit = async (req, res) => {
     session: {
       user: {
         _id,
+        avatarUrl: currentAvatarUrl,
         email: currentEmail,
         username: currentUsername,
         name: currentName,
@@ -182,6 +183,7 @@ export const postEdit = async (req, res) => {
       },
     },
     body: { name, email, username, location },
+    file,
   } = req;
 
   const updates = {};
@@ -213,6 +215,13 @@ export const postEdit = async (req, res) => {
       });
     }
     updates.username = username;
+  }
+
+  // Check if user uploaded avatar THEN change avatar URL
+  if (file) {
+    updates.avatarUrl = file.path;
+  } else {
+    updates.avatarUrl = currentAvatarUrl;
   }
 
   // Only update if there are changes

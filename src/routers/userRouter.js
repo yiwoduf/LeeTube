@@ -12,12 +12,20 @@ import {
   getChangePassword,
   postChangePassword,
 } from "../controllers/userController";
-import { protectedMiddleware, publicOnlyMiddleware } from "../middlewares";
+import {
+  protectedMiddleware,
+  publicOnlyMiddleware,
+  uploadFiles,
+} from "../middlewares";
 
 const userRouter = express.Router();
 
 userRouter.get("/logout", protectedMiddleware, logout);
-userRouter.route("/edit").all(protectedMiddleware).get(getEdit).post(postEdit);
+userRouter
+  .route("/edit")
+  .all(protectedMiddleware)
+  .get(getEdit)
+  .post(uploadFiles.single("avatar"), postEdit);
 userRouter
   .route("/change-password")
   .all(protectedMiddleware)
