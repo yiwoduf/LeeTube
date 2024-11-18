@@ -32,6 +32,7 @@ app.use(
 
 /* SET ROUTERS */
 app.use(localsMiddleware);
+/** TODO: Don't save file to server -> This is TEMP */
 app.use("/uploads", express.static("uploads"));
 app.use("/", rootRouter);
 app.use("/videos", videoRouter);
