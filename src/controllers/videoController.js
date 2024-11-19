@@ -9,15 +9,14 @@ export const home = async (req, res) => {
 
 export const view = async (req, res) => {
   const { id } = req.params;
-  const video = await Video.findById(id);
-  const owner = await User.findById(video.owner);
+  // populate() is used to get the owner's information by expanding the mongoose object
+  const video = await Video.findById(id).populate("owner");
   if (!video) {
     return res.render("404", { pageTitle: "Video not found" });
   }
   return res.render("videos/watch", {
     pageTitle: video.title,
     video,
-    owner,
   });
 };
 
