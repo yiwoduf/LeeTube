@@ -14,6 +14,8 @@ const userSchema = new mongoose.Schema({
 
 userSchema.pre("save", async function () {
   console.log("User password: ", this.password);
+  // TODO: Add Condition for Hashing Password
+  // Now upload video 'saves' user..
   this.password = await bcrypt.hash(this.password, 3);
   console.log("Hashed: ", this.password);
 });

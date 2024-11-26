@@ -19,7 +19,7 @@ export const view = async (req, res) => {
     video,
   });
 };
-
+// TODO: Add Conditions (EDIT, DELETE) for Managing Videos
 export const getEdit = async (req, res) => {
   const { id } = req.params;
   const video = await Video.findById(id);
