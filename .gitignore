@@ -1,4 +1,6 @@
 /node_modules
 .env
-Start-Mongo.bat
+start-mongo.sh
 /uploads
+/assets
+/.idea
